@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(test_123)
 
 include(CheckCXXCompilerFlag)
@@ -24,10 +24,14 @@ add_executable(test_123 main.cpp)
 add_executable(time_time_asio time_asio.cpp)
 add_executable(weak_ptr weak_ptr.cpp)
 add_executable(pointers_container pointers_container.cpp)
+add_executable(shano shano.cpp)
+add_executable(mutate mutate.cpp)
 
 target_link_libraries(test_123 ${Boost_LIBRARIES})
 target_link_libraries(time_time_asio ${Boost_LIBRARIES})
 target_link_libraries(weak_ptr ${Boost_LIBRARIES})
 target_link_libraries(pointers_container ${Boost_LIBRARIES})
+target_link_libraries(shano ${Boost_LIBRARIES})
+#target_link_libraries(mutate ${Boost_LIBRARIES})
 
 install(TARGETS test_123 RUNTIME DESTINATION bin)
