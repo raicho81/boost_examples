@@ -37,12 +37,12 @@ enum ENUMTEST
   TWO 	= 2
 };
 
-ENUMTEST a[]={ONE, TWO, ZERO};
+ENUMTEST a[]={ ONE, TWO, ZERO };
 
-class VisualizableVector 
+class VisualizableVector
 {
   public:
-    class proxy 
+    class proxy
     {
       public:
       proxy ( vector<int>* v ) : vect ( v )
@@ -73,21 +73,41 @@ class VisualizableVector
 
 namespace xxx
 {
+  namespace yyy
+  {
+    const int a = 1;
+  }
+
   enum ALA_BALA
   {
-    a = 1,
+    a = yyy::a,
     b = 2,
     c = 3
   };
 }
 
+const int x = 12;
+
 int main()
 {
-  VisualizableVector v( new vector<int> );
-  //...
-  v->push_back( 10 ); // Note use of -> operator instead of . operator
-  v->push_back( 20 );
+  enum XXX
+  {
+    x = x,
+    y = 13,
+    z = 14,
+  };
+  
+  cout << XXX::x << endl;
+  cout << a << endl;
 }
+
+// int main()
+// {
+//   VisualizableVector v( new vector<int> );
+//   //...
+//   v->push_back( 10 ); // Note use of -> operator instead of . operator
+//   v->push_back( 20 );
+// }
 
 // int main (void)
 // {
