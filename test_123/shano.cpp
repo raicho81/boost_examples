@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <boost/lexical_cast.hpp>
+
 using namespace std;
 
 
@@ -88,18 +90,86 @@ namespace xxx
 
 const int x = 12;
 
-int main()
+
+class A 
 {
-  enum XXX
-  {
-    x = x,
-    y = 13,
-    z = 14,
-  };
-  
-  cout << XXX::x << endl;
-  cout << a << endl;
+public:
+  virtual void test(int xx){ __attribute__((unused)) int b = 0;}
+  int m_iTest = 0;
+};
+
+ 
+struct Foo {
+    int n;
+    Foo() {
+       std::clog << "static constructor\n";
+    }
+    ~Foo() {
+       std::clog << "static destructor\n";
+    }
+};
+ 
+Foo f; // static object
+
+
+class MemLeak
+{
+  private:
+    int* a;
+
+  public:
+    MemLeak() throw(std::exception)
+    {
+      a = new int[10];
+      throw std::exception(); // memory leak
+    }
+
+    ~MemLeak() throw (std::exception)
+    {
+      delete [] a;
+    }
+};
+
+int main()
+{	
+	string sParam = "";
+	cout << "sParam.empty()=" << sParam.empty() << std::endl;
+
+	unsigned int aaaa = boost::lexical_cast < unsigned int >( sParam );
+	
+	cout << "aaaa=" << aaaa << std::endl;
+
+	for(int i=0; i < 1024; ++i)
+	{
+		try
+		{
+		MemLeak m;
+		}
+		catch(std::exception& e)
+		{
+		}
+	}
+
+	std::cout << "main function , " << std::hex << 873453485763845 << std::endl;
 }
+
+// int main()
+// {
+//   cout << "sizeof(A) = " << sizeof(A) << endl;
+// }
+
+// int main()
+// {
+//   enum XXX
+//   {
+//     x = x,
+//     y = 13,
+//     z = 14,
+//   };
+//   
+//   cout << XXX::x << endl;
+//   cout << a << endl;
+// }
 
 // int main()
 // {
