@@ -1,6 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <boost/lexical_cast.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/function.hpp>
+#include <boost/timer.hpp>
+#include <boost/bind.hpp>
 
 using namespace std;
 
@@ -109,8 +113,7 @@ struct Foo {
     }
 };
  
-Foo f; // static object
-
+Foo ff; // static object
 
 class MemLeak
 {
@@ -118,7 +121,7 @@ class MemLeak
     int* a;
 
   public:
-    MemLeak() throw(std::exception)
+    MemLeak() throw( std::exception )
     {
       a = new int[10];
       throw std::exception(); // memory leak
@@ -130,28 +133,67 @@ class MemLeak
     }
 };
 
+struct CallbackA
+{
+    void some_f()
+    {
+        std::cout << "CallbackA::some_f()" << std::endl;
+    }
+    
+    void call_me( boost::system::error_code& ec )
+    {
+        std::cout << "A::call_me(), ec: " << ec << ", this=" << std::hex << this << std::endl;
+        some_f();
+    }
+};
+
+struct CallbackB
+{
+    void do_stuff_and_invoke_cb( boost::function<void( boost::system::error_code& )> f )
+    {
+        boost::system::error_code ecc;
+        test123( boost::bind( f, ecc ) );
+    }
+    
+    void test123( boost::function<void()> f )
+    {
+        f();
+    }
+};
+
 int main()
-{	
-	string sParam = "";
-	cout << "sParam.empty()=" << sParam.empty() << std::endl;
+{
+    CallbackA a;
+    CallbackB b;
+    b.do_stuff_and_invoke_cb( boost::bind( &CallbackA::call_me, boost::ref( a ), _1 ) );
 
-	unsigned int aaaa = boost::lexical_cast < unsigned int >( sParam );
-	
-	cout << "aaaa=" << aaaa << std::endl;
-
-	for(int i=0; i < 1024; ++i)
-	{
-		try
-		{
-		MemLeak m;
-		}
-		catch(std::exception& e)
-		{
-		}
-	}
-
-	std::cout << "main function , " << std::hex << 873453485763845 << std::endl;
+    return 0;
 }
+
+// int main()
+// {	
+// 	string sParam = "1";
+// 	cout << "sParam.empty()=" << sParam.empty() << std::endl;
+// 
+// 	unsigned int aaaa = boost::lexical_cast < unsigned int >( sParam );
+// 	
+// 	cout << "aaaa=" << aaaa << std::endl;
+// 
+// 	for(int i=0; i < 1024; ++i)
+// 	{
+// 		try
+// 		{
+// 			MemLeak m;
+// 		}
+// 		catch(std::exception& e)
+// 		{
+// 		}
+// 	}
+// 
+// 	std::cout << "main function , " << std::hex << 873453485763845 << std::endl;
+// 
+//     return 0;
+// }
 
 // int main()
 // {
