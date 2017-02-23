@@ -9,7 +9,7 @@
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
 
 class Test;
-typedef void(Test::* memfn)();
+using memfn = void(Test::*)();
 
 class Test
 {
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     std::cout << "Stopping ..." << std::endl;
 
 //    memfn f = &Test::StopThread;
-//    CALL_MEMBER_FN(t,f);
+//    CALL_MEMBER_FN(t, f);
     t.StopThread();
 
    
